@@ -378,6 +378,13 @@ void play()
 {
     chaturaji g;
     g.print_board();
+    vector<long long> result = make_points(g);
+    // 결과 출력
+    cout << "각 팀의 게임 평가 계산 결과:\n";
+    cout << RED << "red   " << RESET << ": " << result[0] << "\n";
+    cout << BLUE << "blue  " << RESET << ": " << result[1] << "\n";
+    cout << YELLOW << "yellow" << RESET << ": " << result[2] << "\n";
+    cout << GREEN << "green " << RESET << ": " << result[3] << "\n";
     string t[4] =
     {
         (string)RED + "red" + RESET,
@@ -420,11 +427,18 @@ void play()
             string s;
             cin >> s;
             g.print_board();
+            vector<long long> result = make_points(g);
+            // 결과 출력
+            cout << "각 팀의 게임 평가 계산 결과:\n";
+            cout << RED << "red   " << RESET << ": " << result[0] << "\n";
+            cout << BLUE << "blue  " << RESET << ": " << result[1] << "\n";
+            cout << YELLOW << "yellow" << RESET << ": " << result[2] << "\n";
+            cout << GREEN << "green " << RESET << ": " << result[3] << "\n";
         }
     }
 }
 
-vector<int> make_points(chaturaji g)
+vector<long long> make_points(chaturaji g)
 {
     int alive = g.count_alive();
     long long int result[4] = { 0, 0, 0, 0 };
@@ -851,18 +865,29 @@ void probability()
     for (int i = 0; i < 4; i++) cin >> score[i];
     chaturaji g(board, score);
     g.print_board();
-    cout << "아무거나 입력한 뒤 엔터를 누르세요.\n";
-    string s;
-    cin >> s;
     vector<int> result = make_points(g);
     // 결과 출력
-    cout << "각 팀의 승리 가능성 계산 결과:\n";
+    cout << "각 팀의 게임 평가 계산 결과:\n";
     cout << RED    << "red   " << RESET << ": " << result[0] << "\n";
     cout << BLUE   << "blue  " << RESET << ": " << result[1] << "\n";
     cout << YELLOW << "yellow" << RESET << ": " << result[2] << "\n";
     cout << GREEN  << "green " << RESET << ": " << result[3] << "\n";
+    cout << "아무거나 입력한 뒤 엔터를 누르세요.\n";
+    string s;
+    cin >> s;
 }
-
+/*
+디버깅용도-복붙하셈
+BS BP XX XX YK YB YN YS
+BN BP XX XX YP YP YP YP
+BB BP XX XX XX XX XX XX
+BK BP XX XX XX XX XX XX
+XX XX XX XX XX XX GP GK
+XX XX XX XX XX XX GP GB
+RP RP RP RP XX XX GP GN
+RS RN RB RK XX XX GP GS
+0 0 0 0
+*/
 int main()
 {
     while (1)
@@ -886,7 +911,7 @@ int main()
         cout << format("##################################################################\n");
         cout << format("{}차{}투{}라{}지 {}게{}임\n", RED, BLUE, YELLOW, GREEN, PURPLE, CYAN);
         cout << format("{}게{}임{}하{}기{}: {}G\n", RED, BLUE, YELLOW, GREEN, CYAN, PURPLE);
-        cout << format("{}확{}률 {}구{}하{}기{}: {}P\n", PURPLE, RED, YELLOW, BLUE, GREEN, CYAN, RED);
+        cout << format("{}게{}임 {}평{}가{}하{}기{}: {}P\n", PURPLE, RED, YELLOW, BLUE, RED, GREEN, CYAN, RED);
         cout << format("{}종{}료{}: {}Q{}\n\n", CYAN, GREEN, BLUE, PURPLE, RESET);
         cin >> s;
         if (s == "G") play();
