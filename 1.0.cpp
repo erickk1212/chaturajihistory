@@ -3,10 +3,10 @@
 #include<vector>
 #include<string>
 #if __has_include("fmt/format.h")
-    #include "fmt/format.h"
-    namespace std { using namespace fmt; }
+#include "fmt/format.h"
+namespace std { using namespace fmt; }
 #else
-    #include <format>
+#include <format>
 #endif
 using namespace std;
 //RBYG
@@ -444,7 +444,7 @@ vector<long long> make_points(chaturaji g)
     long long int result[4] = { 0, 0, 0, 0 };
     //weights
     int weight1_1_1, weight1_2_1,
-    weight2_1, weight2_2,
+        weight2_1, weight2_2,
         weight3,
         weight4_1, weight4_2, weight4_3, weight4_4, weight4_5,
         weight5;
@@ -665,7 +665,7 @@ vector<long long> make_points(chaturaji g)
                                     }
                                 }
                                 if (chk)
-                                result[g.board[i][j].c - 1] += weight3 * 85;
+                                    result[g.board[i][j].c - 1] += weight3 * 85;
                             }
                         }
                     }
@@ -674,23 +674,23 @@ vector<long long> make_points(chaturaji g)
             // 4
             if (g.board[i][j].c == chaturaji::X) continue;
             g.set_turn(g.board[i][j].c);
-            vector<pair<int,int>> moves4 = g.get_legal_moves(i, j);
-            for (auto &mv : moves4)
+            vector<pair<int, int>> moves4 = g.get_legal_moves(i, j);
+            for (auto& mv : moves4)
             {
                 chaturaji g2 = g;
                 g2.move(i, j, mv.first, mv.second);
                 chaturaji::piece captured = g.board[mv.first][mv.second];
                 auto value = [&](chaturaji::type t)
-                {
-                    switch (t) {
+                    {
+                        switch (t) {
                         case chaturaji::pawn: return 1;
                         case chaturaji::knight: return 3;
                         case chaturaji::bishop: return 5;
                         case chaturaji::ship: return 5;
                         case chaturaji::king: return 4;
                         default: return 0;
-                    }
-                };
+                        }
+                    };
                 int attacker = g.board[i][j].c - 1;
                 int gain = 0;
                 // 4-4
@@ -698,67 +698,67 @@ vector<long long> make_points(chaturaji g)
                 {
                     bool defended = false;
                     for (int k = 0; k < 8; k++)
-                    for (int l = 0; l < 8; l++)
-                    {
-                        if (g.board[k][l].c != chaturaji::X &&
-                            g.board[k][l].c != g.board[i][j].c)
+                        for (int l = 0; l < 8; l++)
                         {
-                            g.set_turn(g.board[k][l].c);
-                            if (g.is_valid_move(k, l, mv.first, mv.second))
-                                defended = true;
+                            if (g.board[k][l].c != chaturaji::X &&
+                                g.board[k][l].c != g.board[i][j].c)
+                            {
+                                g.set_turn(g.board[k][l].c);
+                                if (g.is_valid_move(k, l, mv.first, mv.second))
+                                    defended = true;
+                            }
                         }
-                    }
                     if (!defended)
                         gain += value(captured.t) * weight4_4;
                 }
                 // 4-1
                 int kingThreat = 0, otherThreat = 0;
                 for (int k = 0; k < 8; k++)
-                for (int l = 0; l < 8; l++)
-                {
-                    if (g2.board[k][l].c != chaturaji::X &&
-                        g2.board[k][l].c != g2.board[mv.first][mv.second].c)
+                    for (int l = 0; l < 8; l++)
                     {
-                        if (g2.is_valid_move(mv.first, mv.second, k, l))
+                        if (g2.board[k][l].c != chaturaji::X &&
+                            g2.board[k][l].c != g2.board[mv.first][mv.second].c)
                         {
-                            if (g2.board[k][l].t == chaturaji::king)
-                                kingThreat++;
-                            else
-                                otherThreat++;
+                            if (g2.is_valid_move(mv.first, mv.second, k, l))
+                            {
+                                if (g2.board[k][l].t == chaturaji::king)
+                                    kingThreat++;
+                                else
+                                    otherThreat++;
+                            }
                         }
                     }
-                }
                 if (kingThreat && otherThreat)
                     gain += (value(g.board[i][j].t)) * weight4_1;
                 // 4-2
                 int multiThreat = 0;
                 for (int k = 0; k < 8; k++)
-                for (int l = 0; l < 8; l++)
-                    if (g2.board[k][l].c != chaturaji::X &&
-                        g2.board[k][l].c != g2.board[mv.first][mv.second].c &&
-                        g2.is_valid_move(mv.first, mv.second, k, l))
-                        multiThreat++;
+                    for (int l = 0; l < 8; l++)
+                        if (g2.board[k][l].c != chaturaji::X &&
+                            g2.board[k][l].c != g2.board[mv.first][mv.second].c &&
+                            g2.is_valid_move(mv.first, mv.second, k, l))
+                            multiThreat++;
                 if (multiThreat >= 2)
                     gain += value(g.board[i][j].t) * weight4_2;
                 // 4-3
                 for (int k = 0; k < 8; k++)
-                for (int l = 0; l < 8; l++)
-                {
-                    if (g2.board[k][l].t == chaturaji::king &&
-                        g2.board[k][l].c != g2.board[mv.first][mv.second].c &&
-                        g2.is_valid_move(mv.first, mv.second, k, l))
+                    for (int l = 0; l < 8; l++)
                     {
-                        // 킹이 공격받음
-                        // 킹 뒤에 같은 팀 기물 있으면 스틸러 가능성
-                        int di = k - mv.first, dj = l - mv.second;
-                        int ni = k + di, nj = l + dj;
-                        if (0 <= ni && ni < 8 && 0 <= nj && nj < 8)
+                        if (g2.board[k][l].t == chaturaji::king &&
+                            g2.board[k][l].c != g2.board[mv.first][mv.second].c &&
+                            g2.is_valid_move(mv.first, mv.second, k, l))
                         {
-                            if (g2.board[ni][nj].c == g2.board[k][l].c)
-                                gain += value(g2.board[ni][nj].t) * weight4_3;
+                            // 킹이 공격받음
+                            // 킹 뒤에 같은 팀 기물 있으면 스틸러 가능성
+                            int di = k - mv.first, dj = l - mv.second;
+                            int ni = k + di, nj = l + dj;
+                            if (0 <= ni && ni < 8 && 0 <= nj && nj < 8)
+                            {
+                                if (g2.board[ni][nj].c == g2.board[k][l].c)
+                                    gain += value(g2.board[ni][nj].t) * weight4_3;
+                            }
                         }
                     }
-                }
                 // 4-5
                 if (captured.c != chaturaji::X)
                 {
@@ -779,16 +779,16 @@ vector<long long> make_points(chaturaji g)
         result[i] += g.get_score()[i] * weight5;
     }
     // 6, 7: 요구하는것이 처리되어있음
-    
-    return vector<int>(result, result + 4);
+
+    return vector<long long>(result, result + 4);
     /*
     1.이동성
     1-1. 1수 이동가능 범위*가중치(35->25->15) * 각 기물별 가중치 차등
     1-2. 2수 이동가능 범위*가중치(14->10->8) * 각 기물별 가중치 차등
     이동 후 바로 잡히지 않는 경우만 산
-    각 기물별 가중치 차등: 룩(20) > 비숍(15) > 나이트(10) > 폰(5) 
+    각 기물별 가중치 차등: 룩(20) > 비숍(15) > 나이트(10) > 폰(5)
     킹은 예외
-    */ 
+    */
     /*
     2.킹 보안
     2-2. 2수 내 자신의 킹 포착 가능성*가중치(-120->-150->-200)
@@ -821,7 +821,7 @@ vector<long long> make_points(chaturaji g)
     */
     /*
     7.기타
-    (x->y->z)인 경우 
+    (x->y->z)인 경우
     x->4명이 모두 생존한 경우 가중치
     y->3명이 생존한 경우 가중치
     z->2명이 생존한 경우 가중치
@@ -865,13 +865,13 @@ void probability()
     for (int i = 0; i < 4; i++) cin >> score[i];
     chaturaji g(board, score);
     g.print_board();
-    vector<int> result = make_points(g);
+    vector<long long> result = make_points(g);
     // 결과 출력
     cout << "각 팀의 게임 평가 계산 결과:\n";
-    cout << RED    << "red   " << RESET << ": " << result[0] << "\n";
-    cout << BLUE   << "blue  " << RESET << ": " << result[1] << "\n";
+    cout << RED << "red   " << RESET << ": " << result[0] << "\n";
+    cout << BLUE << "blue  " << RESET << ": " << result[1] << "\n";
     cout << YELLOW << "yellow" << RESET << ": " << result[2] << "\n";
-    cout << GREEN  << "green " << RESET << ": " << result[3] << "\n";
+    cout << GREEN << "green " << RESET << ": " << result[3] << "\n";
     cout << "아무거나 입력한 뒤 엔터를 누르세요.\n";
     string s;
     cin >> s;
