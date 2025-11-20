@@ -374,6 +374,8 @@ public:
     ~chaturaji() = default;
 };
 
+vector<long long> make_points(chaturaji g);
+
 void play()
 {
     chaturaji g;
