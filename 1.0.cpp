@@ -3,10 +3,10 @@
 #include<vector>
 #include<string>
 #if __has_include("fmt/format.h")
-#include "fmt/format.h"
-namespace std { using namespace fmt; }
+    #include "fmt/format.h"
+    namespace std { using namespace fmt; }
 #else
-#include <format>
+    #include <format>
 #endif
 using namespace std;
 //RBYG
